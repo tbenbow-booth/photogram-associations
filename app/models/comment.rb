@@ -2,7 +2,7 @@
 #
 # Table name: comments
 #
-#  id         :integer          not null, primary key
+#  id         :bigint           not null, primary key
 #  body       :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -14,10 +14,12 @@ class Comment < ApplicationRecord
   validates(:commenter, { :presence => true })
 
   # Association accessor methods to define:
-  
+
   ## Direct associations
+  ## Direct associations:
 
   # Comment#commenter: returns a row from the users table associated to this comment by the author_id column
+  belongs_to(:commenter, class_name: "User", foreign_key: "author_id")
 
   # Comment#photo: returns a row from the photos table associated to this comment by the photo_id column
 
@@ -30,4 +32,7 @@ class Comment < ApplicationRecord
 
     return the_user
   end
+  belongs_to(:photo, class_name: "Photo", foreign_key: "photo_id")
+  # Alternatively:
+  # belongs_to(:photo)
 end

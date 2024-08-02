@@ -2,7 +2,7 @@
 #
 # Table name: photos
 #
-#  id             :integer          not null, primary key
+#  id             :bigint           not null, primary key
 #  caption        :text
 #  comments_count :integer
 #  image          :string
@@ -17,13 +17,18 @@ class Photo < ApplicationRecord
 
   # Association accessor methods to define:
   
+   # Association accessor methods to define:
+
   ## Direct associations
 
   # Photo#poster: returns a row from the users table associated to this photo by the owner_id column
+  belongs_to(:poster, class_name: "User", foreign_key: "owner_id")
 
   # Photo#comments: returns rows from the comments table associated to this photo by the photo_id column
+  has_many(:comments, class_name: "Comment", foreign_key: "photo_id")
 
   # Photo#likes: returns rows from the likes table associated to this photo by the photo_id column
+  has_many(:likes, class_name: "Like", foreign_key: "photo_id")
 
   ## Indirect associations
 
@@ -57,7 +62,7 @@ class Photo < ApplicationRecord
 
   def fans
     my_likes = self.likes
-    
+
     array_of_user_ids = Array.new
 
     my_likes.each do |a_like|
@@ -82,4 +87,5 @@ class Photo < ApplicationRecord
 
     return formatted_usernames
   end
+  has_many(:fans, through: :likes, source: :fan)
 end
